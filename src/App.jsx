@@ -6,7 +6,7 @@ import Home from './pages/Home'
 import AuthGuard from './routes/AuthGuard'
 import IsLogin from './routes/IsLogin'
 import Navbar from './components/Navbar'
-import Footer from './components/footer'
+import Footer from "./components/Footer";
 import Products from './pages/Products'
 import CreateProduct from './pages/CreateProduct'
 import Cart from './pages/Cart'
