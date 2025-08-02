@@ -22,6 +22,7 @@ const Navbar = () => {
           <Link to="/userprofile" className="text-gray-700 hover:text-blue-600 transition">Your Profile</Link>
           <Link to="/orders" className="text-gray-700 hover:text-blue-600 transition">Orders</Link>
           <Link to="/yourproducts" className="text-gray-700 hover:text-blue-600 transition">Your Products</Link>
+          <Link to="/createproduct" className="text-gray-700 hover:text-blue-600 transition">Create Product</Link>
           <button onClick={logOut} className="text-gray-700 hover:text-red-500 transition">Logout</button>
         </div>
         <div className="md:hidden">

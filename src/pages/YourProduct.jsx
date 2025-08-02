@@ -49,7 +49,6 @@ const YourProduct = () => {
         desc,
         price
       })
-      alert("Product update successfully!")
       alert("Product updated successfully!");
       setProduct(prev =>
         prev.map((p) =>

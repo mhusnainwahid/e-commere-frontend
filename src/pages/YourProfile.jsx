@@ -10,29 +10,64 @@ const YourProfile = () => {
     image: '../assets/login img.jpg',
   });
 
-  const [name,setName] = useState('')
-  const [email,setEmail] = useState('')
-  const [role,setRole] = useState('')
-  const [bio,setBio] = useState('')
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(user);
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [role, setRole] = useState('')
+  const [bio, setBio] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [image, setImage] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
-
+  const handleImage = (e) => {
+    setImage(e.target.files[0])
+  }
   const userId = localStorage.getItem("userId")
-  useEffect(()=>{
-    const fetchUser = async () =>{
+  useEffect(() => {
+    const fetchUser = async () => {
       try {
         const existUser = await axios.get(`http://localhost:8000/getauser/${userId}`)
         // console.log(existUser.data.user)
         setName(existUser.data.user.name)
         setEmail(existUser.data.user.email)
         setRole(existUser.data.user.role)
+        setBio(existUser.data.user.bio)
+        setImageUrl(existUser.data.user.image)
       } catch (error) {
         console.log(error)
       }
     }
     fetchUser()
-  },[userId])
+  }, [userId])
+
+  const isModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleEdit = async (e) => {
+    e.preventDefault()
+    // console.log(name,email,bio,image)
+    try {
+
+      const imageData = new FormData();
+      imageData.append('image', image);
+      const uploadRes = await axios.post('http://localhost:8000/userimage', imageData);
+      const uploadedImageUrl = uploadRes.data.imageUrl;
+      setImageUrl(uploadedImageUrl);
+      const res = await axios.put(`http://localhost:8000/editauser/${userId}`, {
+        name,
+        email,
+        bio,
+        imageUrl: uploadedImageUrl
+      })
+      setIsModalOpen(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center px-4">
@@ -59,23 +94,22 @@ const YourProfile = () => {
 
           <div>
             <label className="block text-sm text-gray-500">Role</label>
-            <span className={`inline-block mt-1 px-3 py-1 rounded-full text-sm font-semibold ${
-              role === 'vendor' ? 'bg-yellow-100 text-yellow-700' :
+            <span className={`inline-block mt-1 px-3 py-1 rounded-full text-sm font-semibold ${role === 'vendor' ? 'bg-yellow-100 text-yellow-700' :
               role === 'admin' ? 'bg-red-100 text-red-700' :
-              'bg-blue-100 text-blue-700'
-            }`}>
+                'bg-blue-100 text-blue-700'
+              }`}>
               {role}
             </span>
           </div>
 
           <div>
             <label className="block text-sm text-gray-500">Bio</label>
-            <p className="font-medium text-base">{user.bio}</p>
+            <p className="font-medium text-base">{bio}</p>
           </div>
 
           <div className="flex justify-end">
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={isModal}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Edit
@@ -83,55 +117,67 @@ const YourProfile = () => {
           </div>
         </div>
       </div>
-      {isEditing && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md space-y-4">
-            <h3 className="text-xl font-bold">Edit Profile</h3>
+      <form onSubmit={handleEdit}>
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+            <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 md:p-8 transition-all">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Update Product</h2>
 
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Full Name"
-              className="w-full p-2 border border-gray-300 rounded"
-            />
+              <div className="space-y-4">
+                <label className="block text-gray-700 font-semibold mb-2">Name</label>
+                <input
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Product Name"
+                />
+                <label className="block text-gray-700 font-semibold mb-2">Email</label>
+                <input
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Email"
+                />
+                <label className="block text-gray-700 font-semibold mb-2">Bio</label>
+                <input
+                  name="bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="bio"
+                  type="text"
+                />
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Your Image</label>
+                  <input
+                    type="file"
+                    onChange={handleImage}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
 
-            <input
-              type="text"
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              placeholder="Bio"
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-
-            <input
-              type="text"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              placeholder="Image URL"
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Save
-              </button>
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                >
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </form>
     </div>
   );
 };
