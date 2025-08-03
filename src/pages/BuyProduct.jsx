@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { data, useLocation } from 'react-router-dom';
+import axios from 'axios'
 
 const BuyProduct = () => {
   const location = useLocation();
   const { product } = location.state || {};
-  const userId = localStorage.getItem("userId")
 
   const [quantity, setQuantity] = useState(1);
 
@@ -20,11 +20,32 @@ const BuyProduct = () => {
     alert(`Added ${quantity} item(s) of ${product.name} to cart.`);
   };
 
-  const handleBuyNow = () => {
+const handleBuyNow = async () => {
+  try {
     alert(`Proceeding to buy ${quantity} item(s) of ${product.name}.`);
-    // console.log(product.-id)
-      console.log(product.name)
-  };
+
+    const res = await axios.post(`${import.meta.env.VITE_BASE_URL}createorder`, {
+      userId: localStorage.getItem("userId"),
+      totalAmount: product.price * quantity,
+      items: [
+        {
+          name: product.name,
+          imageUrl:product.imageUrl,
+          productId: product._id,
+          quantity: quantity,
+          price: product.price,
+          vendorId: product.userId
+        }
+      ]
+    });
+
+    console.log("Order placed:", res.data);
+
+  } catch (error) {
+    console.log("Error placing order:", error);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-blue-50 py-10 px-4 sm:px-8">

@@ -18,6 +18,7 @@ const Login = () => {
         const token = res.data.existUser.token;
         localStorage.setItem('token', token);
         localStorage.setItem('userId',res.data.existUser._id)
+        localStorage.setItem('role',res.data.existUser.role)
         navigate('/');
       }
     } catch (error) {
