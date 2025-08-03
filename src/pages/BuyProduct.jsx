@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { data, useLocation } from 'react-router-dom';
 
 const BuyProduct = () => {
   const location = useLocation();
   const { product } = location.state || {};
+  const userId = localStorage.getItem("userId")
 
   const [quantity, setQuantity] = useState(1);
 
@@ -21,6 +22,8 @@ const BuyProduct = () => {
 
   const handleBuyNow = () => {
     alert(`Proceeding to buy ${quantity} item(s) of ${product.name}.`);
+    // console.log(product.-id)
+      console.log(product.name)
   };
 
   return (
