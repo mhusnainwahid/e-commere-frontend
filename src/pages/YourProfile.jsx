@@ -31,7 +31,7 @@ const YourProfile = () => {
         setEmail(existUser.data.user.email)
         setRole(existUser.data.user.role)
         setBio(existUser.data.user.bio)
-        setImageUrl(existUser.data.user.image)
+        setImageUrl(existUser.data.user.imageUrl)
       } catch (error) {
         console.log(error)
       }
@@ -51,14 +51,17 @@ const YourProfile = () => {
       const imageData = new FormData();
       imageData.append('image', image);
       const uploadRes = await axios.post('http://localhost:8000/userimage', imageData);
-      const uploadedImageUrl = uploadRes.data.imageUrl;
-      setImageUrl(uploadedImageUrl);
+      // console.log(uploadRes.data.imageUrl)
+      setImageUrl(uploadRes.data.imageUrl);
       const res = await axios.put(`http://localhost:8000/editauser/${userId}`, {
         name,
         email,
         bio,
-        imageUrl: uploadedImageUrl
+        imageUrl
       })
+      if (res === 200) {
+        alert("Profile update succesully!")
+      }
       setIsModalOpen(false)
     } catch (error) {
       console.log(error)
@@ -73,11 +76,14 @@ const YourProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         <div className="flex flex-col items-center mb-6">
-          <img
-            src={'https://via.placeholder.com/150'}
-            alt="User Profile"
-            className="w-28 h-28 rounded-full object-cover shadow-lg"
-          />
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="User Profile"
+              className="w-28 h-28 rounded-full object-cover shadow-lg"
+            />
+          )}
+
           <h2 className="text-2xl font-semibold mt-4 text-gray-800">Your Profile</h2>
         </div>
 
