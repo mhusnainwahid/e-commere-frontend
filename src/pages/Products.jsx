@@ -9,7 +9,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/getproduct');
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}getproduct`);
         // console.log("Fetched data:", res.data.product);
         setProduct(res.data.product);
       } catch (error) {
@@ -22,7 +22,7 @@ const Products = () => {
 
   const addToCart = async (productId) => {
     try {
-      const res = await axios.post('http://localhost:8000/addtocart',{
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}addtocart`,{
         userId,
         productId,
       })

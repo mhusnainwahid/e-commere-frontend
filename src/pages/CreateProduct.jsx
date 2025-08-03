@@ -27,11 +27,11 @@ const CreateProduct = () => {
       imageData.append('image', image);
       const userId = localStorage.getItem('userId');
 
-      const uploadRes = await axios.post('http://localhost:8000/image', imageData);
+      const uploadRes = await axios.post(`${import.meta.env.VITE_BASE_URL}image`, imageData);
       const uploadedImageUrl = uploadRes.data.imageUrl;
       setImageUrl(uploadedImageUrl);
 
-      const res = await axios.post('http://localhost:8000/createproduct', {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}createproduct`, {
         name,
         desc,
         price,

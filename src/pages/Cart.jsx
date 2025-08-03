@@ -11,7 +11,7 @@ const Cart = () => {
 
   const fetchCartProducts = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/getcartproducts/${userId}`);
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}getcartproducts/${userId}`);
       setCartItem(res.data.cart);
     } catch (error) {
       console.log("Error fetching cart products:", error);
@@ -20,7 +20,7 @@ const Cart = () => {
 
   const removeCart = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/deletecartproducts/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}deletecartproducts/${id}`);
       alert("Item removed from cart!");
       fetchCartProducts();
     } catch (error) {
