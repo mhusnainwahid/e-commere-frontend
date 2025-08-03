@@ -25,7 +25,7 @@ const YourProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const existUser = await axios.get(`http://localhost:8000/getauser/${userId}`)
+        const existUser = await axios.get(`${import.meta.env.VITE_BASE_URL}getauser/${userId}`)
         // console.log(existUser.data.user)
         setName(existUser.data.user.name)
         setEmail(existUser.data.user.email)
@@ -50,10 +50,10 @@ const YourProfile = () => {
 
       const imageData = new FormData();
       imageData.append('image', image);
-      const uploadRes = await axios.post('http://localhost:8000/userimage', imageData);
+      const uploadRes = await axios.post(`${import.meta.env.VITE_BASE_URL}userimage`, imageData);
       // console.log(uploadRes.data.imageUrl)
       setImageUrl(uploadRes.data.imageUrl);
-      const res = await axios.put(`http://localhost:8000/editauser/${userId}`, {
+      const res = await axios.put(`${import.meta.env.VITE_BASE_URL}editauser/${userId}`, {
         name,
         email,
         bio,

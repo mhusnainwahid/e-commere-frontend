@@ -30,7 +30,7 @@ export const UserOrderPage = () => {
   useEffect(()=>{
     const fetchOrders = async()=>{
       try {
-        const orders = await axios.get(`http://localhost:8000/getorders/${userId}`)
+        const orders = await axios.get(`${import.meta.env.VITE_BASE_URL}getorders/${userId}`)
         console.log(orders)
       } catch (error) {
         console.log(error)

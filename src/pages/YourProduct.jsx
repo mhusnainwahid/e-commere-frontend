@@ -13,7 +13,7 @@ const YourProduct = () => {
   useEffect(() => {
     const fetchYourProducts = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/getyourproducts/${userId}`);
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}getyourproducts/${userId}`);
         setProduct(res.data.product);
       } catch (error) {
         console.log(error);
@@ -25,7 +25,7 @@ const YourProduct = () => {
   const handleDelete = async (id) => {
     // console.log(id)
     try {
-      const res = await axios.delete(`http://localhost:8000/${id}`)
+      const res = await axios.delete(`${import.meta.env.VITE_BASE_URL}${id}`)
       alert("Product delete successfully!")
       setProduct(prev => prev.filter(p => p._id !== id));
     } catch (error) {
@@ -44,7 +44,7 @@ const YourProduct = () => {
     e.preventDefault()
     // console.log(name, price, desc)
     try {
-      const { data } = await axios.put(`http://localhost:8000/${selectedProductId}`, {
+      const { data } = await axios.put(`${import.meta.env.VITE_BASE_URL}${selectedProductId}`, {
         name,
         desc,
         price
